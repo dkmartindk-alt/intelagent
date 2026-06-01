@@ -9,6 +9,7 @@ class EurekaServerApplicationTests {
 	@Test
 	void contextLoads() {
 		//Todo
+		//More todo!
 	}
 
 }
