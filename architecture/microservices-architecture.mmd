@@ -1,0 +1,54 @@
+graph TB
+    subgraph "Service Discovery Layer"
+        EUREKA[Eureka Server - Service Registry]
+    end
+    
+    subgraph "Presentation Layer"
+        GUI[GUI MS - Admin Interface]
+    end
+    
+    subgraph "Orchestration Layer"
+        CONTROLLER[Controller MS - Orchestrator]
+    end
+    
+    subgraph "Security Layer"
+        RAC[ResourceAccessControl MS - Security Gateway]
+        UG[UserGroup MS - User/Group Management]
+    end
+    
+    subgraph "Resource Layer"
+        RM[ResourceManager MS - Resource Router]
+        FR[FolderResource MS - Folder Operations]
+    end
+    
+    %% Connections through Eureka
+    GUI -.-> EUREKA
+    CONTROLLER -.-> EUREKA
+    RAC -.-> EUREKA
+    UG -.-> EUREKA
+    RM -.-> EUREKA
+    FR -.-> EUREKA
+    
+    %% Actual service-to-service communication via Eureka
+    GUI -- "Service Discovery" --> CONTROLLER
+    CONTROLLER -- "Service Discovery" --> RAC
+    RAC -- "Service Discovery" --> UG
+    RAC -- "Service Discovery" --> RM
+    RM -- "Service Discovery" --> FR
+    FR -- "Service Data" --> RM
+    RM -- "Secure Resource Data" --> RAC
+    RAC -- "Filtered Response" --> CONTROLLER
+    CONTROLLER -- "Response" --> GUI
+    
+    %% Styling
+    classDef discovery fill:#ffe6ee
+    classDef presentation fill:#e1f5fe
+    classDef orchestration fill:#f3e5f5
+    classDef security fill:#fff3e0
+    classDef resource fill:#e8f5e8
+    
+    class EUREKA discovery
+    class GUI presentation
+    class CONTROLLER orchestration
+    class RAC,UG security
+    class RM,FR resource

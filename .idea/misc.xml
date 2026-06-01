@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/code/gui-ms/gui-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/code/usergroup-ms/usergroup-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/code/controller-ms/code/controller-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/code/eureka-server/eureka-server/pom.xml" />
+        <option value="$PROJECT_DIR$/code/folderresource-ms/folderresource-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/code/resourcemanager-ms/pom.xml" />
+        <option value="$PROJECT_DIR$/code/resourceaccesscontrol-ms/resourceaccesscontrol-ms/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_25" default="true" project-jdk-name="25" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>

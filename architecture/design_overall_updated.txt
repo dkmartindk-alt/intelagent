@@ -1,0 +1,63 @@
+# Updated Microservices Architecture for IPaaS Management Plane
+
+## System Overview
+This blueprint defines the management and administration plane for a Microservice-based Integration Platform as a Service (IPaaS). The architecture is optimized for strict security isolation, fine-grained access control with inheritance, and highly extensible resource management.
+
+## Microservice Inventory & Responsibilities
+
+### Presentation & Orchestration Layer
+- **GUI MS**: The administrative user interface. Sends asynchronous requests (AJAX/JSON) to interact with the system.
+- **Controller MS (Orchestrator)**: The central brain of the management plane. Receives requests from the GUI, coordinates multi-step business workflows, and acts as the state orchestrator. It does not talk to data stores directly.
+
+### Security & Access Layer
+- **ResourceAccessControl MS (Secure Proxy)**: Acts as a mandatory security gateway sitting between the Controller and the Resource data layer. No resource data can be retrieved without passing through this service.
+- **UserGroup MS**: Associated with ResourceAccessControl. Manages users, roles, and administrative group mappings.
+
+### Resource & Domain Layer
+- **ResourceManager MS**: Manages the logical structure of resources (e.g., folder hierarchies and item metadata). It remains "security-blind" and relies on the ResourceAccessControl MS proxy for protection.
+- **FolderResource MS**: Specialized microservice for folder-type resources. Since folders are treated as a special type of resource, they have their dedicated service to handle folder-specific operations like listing contents and managing parent-child relationships.
+- **Specific <ResourceType> MS (e.g., WorkFlowResource MS)**: Specialized microservices instantiated per resource type. They handle type-specific data and processing.
+- **<TriggerX> MS**: Event-driven components that register with their respective Resource Type microservices to feed external events into the system.
+
+## Core Data Flow: Folder Content Retrieval
+When an administrator clicks to view the contents of a folder (e.g., Folder ID 123), the system must execute the following secure sequence:
+
+```
+[ GUI MS ] ──(1. Request Folder 123 Content)──> [ Controller MS ]
+                                                         │
+                                      (2. Forward request with User/Group Context)
+                                                         │
+                                                         ▼
+[ FolderResource MS ] <──(4. Fetch Contents)── [ ResourceAccessControl MS ]
+         │                                               │
+ (Returns folder contents)                               │
+         └───────────────(5. Payload)───────────────────>│
+                                                         │ (6. Evaluates Inheritance & Filters)
+                                                         │
+[ GUI MS ] <──(8. JSON Response)── [ Controller MS ] <───(7. Secure Clean Payload)
+```
+
+## Flow Step-by-Step:
+1. GUI MS sends an AJAX request to Controller MS to view Folder 123.
+2. Controller MS forwards the request to ResourceAccessControl MS, appending the user's ID and associated Groups (y, z, a).
+3. ResourceAccessControl MS evaluates permissions for the parent container (Folder 123).
+4. ResourceAccessControl MS queries ResourceManager MS to route to the appropriate service (FolderResource MS) to fetch all child items contained within Folder 123.
+5. FolderResource MS returns a "fat payload" containing the child items along with basic security metadata tags (e.g., inherits_security: true, owner_group: "AdminGroup").
+6. ResourceAccessControl MS processes the inheritance logic in-memory:
+   - Optimization Rule: If the parent folder grants access and a child item has inherits_security: true, the child is approved instantly without a database lookup.
+   - If a child has broken inheritance, a specific permission check is executed.
+7. ResourceAccessControl MS filters out unauthorized items and returns a clean, secure JSON payload to Controller MS.
+8. Controller MS forwards the clean JSON back to GUI MS for rendering.
+
+## Key Architectural Rules:
+- **Data Isolation**: Each microservice must own its own data. The ResourceManager MS must not know who has access, and the ResourceAccessControl MS must not know how resources function structurally.
+- **In-Memory Filtering**: To prevent the $N+1$ network query problem, ensure ResourceManager passes security metadata tags downstream so ResourceAccessControl can compute inheritance loops in-memory without repetitive network hops.
+- **Extensibility**: Design the connection between ResourceManager MS and specific <ResourceType> MS using a factory pattern/interface model, allowing new resource types to be plugged in seamlessly.
+- **Folders as Resources**: Folders are treated as a special type of resource, managed by a dedicated FolderResource MS, maintaining consistency in the architecture.
+
+## Basic Demo Features:
+The basic demo enables users to:
+- Browse through folder hierarchies
+- Create new folders
+- Delete existing folders
+- View folder contents with proper security filtering

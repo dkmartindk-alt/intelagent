@@ -1,0 +1,27 @@
+graph TD
+    A[ResourceManager MS] --> B(Spring Boot Application)
+    A --> C[Eureka Client Registration]
+    A --> D[Resource Service Layer]
+    A --> E[Resource Controller]
+    A --> F[Data Models]
+    A --> G[DTO Objects]
+    A --> H[OpenAPI/Swagger]
+    
+    B --> I[Main Application Class]
+    C --> J[Eureka Discovery Client]
+    D --> K[Resource Management Logic]
+    D --> L[In-Memory Storage]
+    E --> M[REST Endpoints]
+    F --> N[Resource, ResourceType, ResourceRelationship]
+    G --> O[ResourceRequest, ResourceResponse]
+    H --> P[API Documentation]
+
+    style A fill:#4e8cff
+    style I fill:#a8e6cf
+    style J fill:#a8e6cf
+    style K fill:#a8e6cf
+    style L fill:#a8e6cf
+    style M fill:#a8e6cf
+    style N fill:#a8e6cf
+    style O fill:#a8e6cf
+    style P fill:#a8e6cf

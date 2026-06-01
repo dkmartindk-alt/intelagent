@@ -1,0 +1,20 @@
+graph TD
+    A[GUI MS] --> B[GuiController]
+    A --> C{Browse Folder}
+    A --> D{Create Folder}
+    A --> E{Delete Folder}
+    A --> F{Get Resource}
+    A --> G{Get Resource Contents}
+
+    B --> H[Resource Model]
+    B --> I[User Model]
+
+    A --> J[Eureka Client]
+    J --> K[Eureka Server]
+
+    style A fill:#4e8cff
+    style B fill:#8bc34a
+    style H fill:#ffeb3b
+    style I fill:#ffeb3b
+    style J fill:#2196f3
+    style K fill:#f44336

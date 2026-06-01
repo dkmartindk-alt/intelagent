@@ -1,0 +1,23 @@
+graph TD
+    A[Eureka Server] --> B[REST Controller Layer]
+    A --> C[Service Layer]
+    A --> D[In-Memory Registry]
+
+    B -->|handles| E[Registration API]
+    B -->|handles| F[Discovery API]
+    B -->|handles| G[Health Check API]
+
+    C -->|manages| H[Service Registration]
+    C -->|manages| I[Service Discovery]
+    C -->|manages| J[Health Monitoring]
+
+    D -->|stores| K[Service Instances]
+    D -->|stores| L[Application Registry]
+
+    M[(Client Services)] -.->|register with| A
+    N[(Client Services)] -.->|discover from| A
+
+    style A fill:#ff9999
+    style D fill:#99ccff
+    style C fill:#99ff99
+    style B fill:#ffff99

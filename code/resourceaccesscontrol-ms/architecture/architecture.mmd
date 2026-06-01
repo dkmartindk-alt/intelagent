@@ -1,0 +1,39 @@
+graph TD
+    A[ResourceAccessControl MS] --> B(ResourceManager MS)
+    A --> C{Permission Check}
+    A --> D{Inheritance Evaluation}
+    A --> E{Filter Unauthorized}
+    A <-- User Context --> F[Controller MS]
+    A <-- Secure Payload --> F
+
+    subgraph "Controllers"
+        G[ResourceAccessControlController]
+    end
+
+    subgraph "Services"
+        H[ResourceAccessControlService]
+        I[ResourceAccessControlServiceImpl]
+    end
+
+    subgraph "Models"
+        J[Permission]
+        K[AccessCheckResult]
+        L[InheritanceRule]
+    end
+
+    G --> H
+    H --> I
+    G --> J
+    G --> K
+    G --> L
+    I --> J
+    I --> K
+    I --> L
+
+    style A fill:#4e8cff
+    style G fill:#cde4ff
+    style H fill:#cde4ff
+    style I fill:#cde4ff
+    style J fill:#f9f
+    style K fill:#f9f
+    style L fill:#f9f

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/code/controller-ms/code/controller-ms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/code/eureka-server/eureka-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/code/folderresource-ms/folderresource-ms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/code/gui-ms/gui-ms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/code/resourceaccesscontrol-ms/resourceaccesscontrol-ms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/code/resourcemanager-ms/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/code/usergroup-ms/usergroup-ms/src/main/java" charset="UTF-8" />
+  </component>
+</project>

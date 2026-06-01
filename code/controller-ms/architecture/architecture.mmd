@@ -1,0 +1,27 @@
+graph TD
+    subgraph "Eureka Server"
+        E[Eureka Server]
+    end
+
+    subgraph "Controller MS"
+        A[Main App] --> AA[Resource Controller]
+        A --> AB[Context Controller]
+        A --> AEureka[Eureka Client]
+        AA --> AC[Resource Service]
+        AB --> AC
+        AC --> AD[User Context Model]
+        AC --> AE[Resource Request Model]
+        AC --> AF[Resource Response Model]
+    end
+
+    E --> A
+    A --> G(ResourceAccessControl MS)
+    A --> H{Forward User Context}
+    A --> I{Coordinate Workflows}
+    A <-- Response --> J[GUI MS]
+
+    style A fill:#4e8cff
+    style AA fill:#e1f5fe
+    style AB fill:#e1f5fe
+    style AC fill:#f3e5f5
+    style AEureka fill:#e8f5e8

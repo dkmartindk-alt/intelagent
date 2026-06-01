@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="usergroup-ms" />
+        <module name="resourceaccesscontrol-ms" />
+        <module name="folderresource-ms" />
+        <module name="resourcemanager-ms" />
+        <module name="gui-ms" />
+        <module name="controller-ms" />
+        <module name="eureka-server" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="controller-ms" options="-parameters" />
+      <module name="eureka-server" options="-parameters" />
+      <module name="folderresource-ms" options="-parameters" />
+      <module name="gui-ms" options="-parameters" />
+      <module name="resourceaccesscontrol-ms" options="-parameters" />
+      <module name="resourcemanager-ms" options="-parameters" />
+      <module name="usergroup-ms" options="-parameters" />
+    </option>
+  </component>
+</project>

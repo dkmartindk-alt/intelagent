@@ -1,0 +1,32 @@
+graph TD
+    A[UserGroup MS] --> B{Manage Users}
+    A --> C{Manage Groups}
+    A --> D{Assign Roles}
+    A <-- User/Group Info --> E[ResourceAccessControl MS]
+
+    subgraph Controllers
+        UC[UserController]
+        GC[GroupController]
+    end
+
+    subgraph Services
+        US[UserService]
+        GS[GroupService]
+    end
+
+    subgraph Models
+        UM[User Model]
+        GM[Group Model]
+        RM[Role Model]
+    end
+
+    UC --> US
+    GC --> GS
+    US --> UM
+    GS --> GM
+    GS --> RM
+
+    style A fill:#4e8cff
+    style Controllers fill:#e1f5fe
+    style Services fill:#e8f5e8
+    style Models fill:#fff3e0

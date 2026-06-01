@@ -1,0 +1,33 @@
+In this text microservice = MS.
+
+The over all design is that
+
+There is a GUI MS - The GUI MS is used by administrators to controll the IPaaS solution.
+
+The GUI MS is talking to the Controller MS.
+
+The Controller MS, is talking to the AccessController MS, the AccessController MS has 2 Microservices associated UserGroup MS and ResourceAccessControll MS.
+
+The ResourceAccessControll MS is talking to ResourceManager MS, the ResourceManager has multiple MS associated, since each resource has a type. Based on the type, the interface for that type can be returned by a specific <ResourceType> MS, including the data for the specific resource.
+
+Workflow is a Resource Type, and the WorkFlowResource MS is receiving information from <TriggerX> MS that has registrered with the WorkFlowResource MS.
+
+---
+Architectural Blueprint: Microservice IPaaS Management Plane1. System OverviewThis blueprint defines the management and administration plane for a Microservice-based Integration Platform as a Service (IPaaS). The architecture is optimized for strict security isolation, fine-grained access control with inheritance, and highly extensible resource management.2. Microservice Inventory & ResponsibilitiesPresentation & Orchestration LayerGUI MS: The administrative user interface. Sends asynchronous requests (AJAX/JSON) to interact with the system.Controller MS (Orchestrator): The central brain of the management plane. Receives requests from the GUI, coordinates multi-step business workflows, and acts as the state orchestrator. It does not talk to data stores directly.Security & Access Layer ResourceAccessControl MS (Secure Proxy): Acts as a mandatory security gateway sitting between the Controller and the Resource data layer. No resource data can be retrieved without passing through this service.UserGroup MS: Associated with AccessControl. Manages users, roles, and administrative group mappings.ResourceResourceAccessControl MS: Associated with AccessControl. Manages ACLs (Access Control Lists), permission states, and security inheritance rules.Resource & Domain LayerResourceManager MS: Manages the logical structure of resources (e.g., folder hierarchies and item metadata). It remains "security-blind" and relies on the ResourceAccessControl MS proxy for protection.Specific <ResourceType> MS (e.g., WorkFlowResource MS): Specialized microservices instantiated per resource type. They handle type-specific data and processing.<TriggerX> MS: Event-driven components that register with their respective Resource Type microservices to feed external events into the system.3. Core Data Flow: Folder Content RetrievalWhen an administrator clicks to view the contents of a folder (e.g., Folder ID 123), the system must execute the following secure sequence:
+[ GUI MS ] ──(1. Request Folder 123 Content)──> [ Controller MS ]
+                                                         │
+                                      (2. Forward request with User/Group Context)
+                                                         │
+                                                         ▼
+[ ResourceManager MS ] <──(4. Fetch All)── [ ResourceAccessControl MS ]
+         │                                               │
+ (Returns all items)                                     │
+         └───────────────(5. Payload)───────────────────>│
+                                                         │ (6. Evaluates Inheritance & Filters)
+                                                         │
+[ GUI MS ] <──(8. JSON Response)── [ Controller MS ] <───(7. Secure Clean Payload)
+
+THE FLOW SHOWNS HOW THE IPaaS WORKS WHEN A USER EDITS A FLOW/RESOURCE - NOT WHEN A trigger starts a flow.
+
+Flow Step-by-Step:GUI MS sends an AJAX request to Controller MS to view Folder 123.Controller MS forwards the request to ResourceAccessControl MS, appending the user’s ID and associated Groups (y, z, a).ResourceAccessControl MS evaluates permissions for the parent container (Folder 123).ResourceAccessControl MS queries ResourceManager MS to fetch all child items contained within Folder 123.ResourceManager MS returns a "fat payload" containing the child items along with basic security metadata tags (e.g., inherits_security: true, owner_group: "AdminGroup").ResourceAccessControl MS processes the inheritance logic in-memory:Optimization Rule: If the parent folder grants access and a child item has inherits_security: true, the child is approved instantly without a database lookup.If a child has broken inheritance, a specific permission check is executed.ResourceAccessControl MS filters out unauthorized items and returns a clean, secure JSON payload to Controller MS.Controller MS forwards the clean JSON back to GUI MS for rendering.4. Key Architectural Rules for the AgentData Isolation: Each microservice must own its own data. The ResourceManager MS must not know who has access, and the ResourceAccessControl MS must not know how resources function structurally.In-Memory Filtering: To prevent the $N+1$ network query problem, ensure ResourceManager passes security metadata tags downstream so AccessControl can compute inheritance loops in-memory without repetitive network hops.Extensibility: Design the connection between ResourceManager MS and specific <ResourceType> MS using a factory pattern/interface model, allowing new resource types to be plugged in seamlessly.
+

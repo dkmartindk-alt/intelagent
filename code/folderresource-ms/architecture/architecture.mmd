@@ -1,0 +1,31 @@
+graph TD
+    A[FolderResource MS] --> B{Handle Folder Ops}
+    A --> C{Manage Contents}
+    A --> D{Maintain Hierarchy}
+    A <-- Folder Request --> E[ResourceManager MS]
+    A <-- Contents --> E
+
+    subgraph Controllers
+        F[FolderController]
+    end
+
+    subgraph Services
+        G[FolderService]
+    end
+
+    subgraph Models
+        H[Folder]
+        I[Resource]
+        J[FolderContent]
+    end
+
+    A --> F
+    F --> G
+    G --> H
+    G --> I
+    G --> J
+
+    style A fill:#4e8cff
+    style F fill:#aaccff
+    style G fill:#aaffcc
+    style H fill:#ffaacc
